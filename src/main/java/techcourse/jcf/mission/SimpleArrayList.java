@@ -25,13 +25,13 @@ public class SimpleArrayList implements SimpleList {
         if (size < capacity) {
             elements[size] = value;
         } else {
-            // cpp clang 따라하기 (capacity 2배)
             capacity <<= 2;
             String[] newElements = new String[capacity];
             for (int i = 0; i < elements.length; i++) {
                 newElements[i] = elements[i];
             }
             newElements[size] = value;
+            this.elements = newElements;
         }
         size++;
         return true;
@@ -39,32 +39,68 @@ public class SimpleArrayList implements SimpleList {
 
     @Override
     public void add(int index, String value) {
-        if (index < 0) {
-            throw new IllegalArgumentException("잘못된 index 입력입니다");
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException("잘못된 index 입력입니다");
         }
-
-
-
+        if (size == capacity) {
+            capacity <<= 2;
+        }
+        String[] newElements = new String[capacity];
+        for (int i = 0; i < index; i++) {
+            newElements[i] = elements[i];
+        }
+        newElements[index] = value;
+        for (int i = index; i < size; i++) {
+            newElements[i] = elements[i];
+        }
+        this.elements = newElements;
+        size++;
     }
 
     @Override
     public String set(int index, String value) {
-        return null;
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        String oldValue = elements[index];
+        elements[index] = value;
+        return oldValue;
     }
 
     @Override
     public String get(int index) {
-        return null;
+        if (index < 0 || index >= size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        return elements[index];
     }
 
     @Override
     public boolean contains(String value) {
-        return false;
+        return indexOf(value) >= 0;
     }
 
     @Override
     public int indexOf(String value) {
-        return 0;
+        return indexOfRange(value, 0, size);
+    }
+
+    int indexOfRange(Object o, int start, int end) {
+        Object[] es = elements;
+        if (o == null) {
+            for (int i = start; i < end; i++) {
+                if (es[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = start; i < end; i++) {
+                if (o.equals(es[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -79,16 +115,34 @@ public class SimpleArrayList implements SimpleList {
 
     @Override
     public boolean remove(String value) {
+        int index = indexOfRange(value, 0, size);
+        if (index >= 0) {
+            final Object[] es = elements;
+            int newSize = size - 1;
+            System.arraycopy(es, index + 1, es, index, newSize - index);
+            es[size = newSize] = null;
+            return true;
+        }
         return false;
     }
 
     @Override
     public String remove(int index) {
-        return null;
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        final Object[] es = elements;
+        String oldValue = (String) es[index];
+        int newSize = size - 1;
+        System.arraycopy(es, index + 1, es, index, newSize - index);
+        es[size = newSize] = null;
+        return oldValue;
     }
 
     @Override
     public void clear() {
-
+        for (int to = size, i = size = 0; i < to; i++) {
+            elements[i] = null;
+        }
     }
 }
