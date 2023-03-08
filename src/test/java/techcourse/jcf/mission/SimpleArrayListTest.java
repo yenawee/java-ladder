@@ -1,7 +1,7 @@
 package techcourse.jcf.mission;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,11 +10,11 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 class SimpleArrayListTest {
-    static List<String> original;
-    static SimpleList simpleList;
+    List<String> original;
+    SimpleList simpleList;
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setup() {
         original = new ArrayList<>();
         simpleList = new SimpleArrayList();
     }
@@ -36,9 +36,6 @@ class SimpleArrayListTest {
 
     @Test
     void set() {
-        original = new ArrayList<>();
-        simpleList = new SimpleArrayList();
-
         original.add("first");
         original.add("second");
         original.add("third");
@@ -54,9 +51,6 @@ class SimpleArrayListTest {
 
     @Test
     void get() {
-        original = new ArrayList<>();
-        simpleList = new SimpleArrayList();
-
         original.add("first");
         original.add("second");
 
@@ -95,9 +89,6 @@ class SimpleArrayListTest {
 
     @Test
     void size() {
-        original = new ArrayList<>();
-        simpleList = new SimpleArrayList();
-
         original.add("first");
         assertThat(original.size()).isEqualTo(1);
 
@@ -107,9 +98,6 @@ class SimpleArrayListTest {
 
     @Test
     void isEmpty() {
-        original = new ArrayList<>();
-        simpleList = new SimpleArrayList();
-
         assertThat(original.isEmpty()).isTrue();
         assertThat(simpleList.isEmpty()).isTrue();
     }
